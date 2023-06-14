@@ -1,0 +1,27 @@
+<canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+    
+    <script>
+    var xValues = [];
+    var yValues = [];
+    var barColors = [];
+    var chartTitle = "Backend"
+
+    xValues.push("Italy", "France", "Spain", "USA", "Argentina")
+    yValues.push(55, 49, 44, 24, 15)
+    barColors.push("red", "green","blue","orange","brown")
+
+    new Chart("myChart", {
+                type: "bar",
+                data: {
+        labels: xValues,
+        datasets: [{
+            barPercentage: 0.5,
+            barThickness: 6,
+            maxBarThickness: 8,
+            minBarLength: 2,
+            data: yValues,
+            backgroundColor: barColors,
+        }]
+    }
+    });
+    </script>
