@@ -2,7 +2,6 @@
 <div class="col-8 mb-2 ">
 <select class="form-select form-select-sm" name="atmdir" id="partNo">
     <?php
-    $dir    = '\\\\192.168.1.7\Nasserver_PE\Adrian\TTV\XLS\\';
     $files2 = scandir($dir, SCANDIR_SORT_ASCENDING);
     foreach($files2 as &$val){
         $firstletter = substr($val,0,1);

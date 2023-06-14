@@ -2,7 +2,7 @@
     <div class="row">
     <div class="col-3">
         <form class="form-inline" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-        <?php require("./atmdir.php"); ?>
+        <?php $dir    = '\\\\192.168.1.7\Nasserver_PE\Adrian\TTV\XLS\\'; require("./atmdir.php"); ?>
             <div class="col-4"><label class="sr-only col-form-label-sm" for="query">Lot No</label></div>
             <div class="col-8 mb-2"><input class = "form-control form-control-sm" type="text" name="fname" id="query" placeholder="Password"></div>
             <div class="col"><button type="submit" class="btn btn-dark mb-2 btn-sm">Submit</button></div>          
