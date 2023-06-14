@@ -29,8 +29,9 @@ $conString = odbc_connect(
     ;DriverId=790;Dbq=$xlFile;DefaultDir=$xlDir" , '', ''
 );
 
-$sqlQuery = "SELECT Distinct tblb.[Tile ID],A1,A2,A3,A4 
-            FROM (SELECT [TILE ID],A1,A2,A3,A4,([DATE] & ' ' & [TIME]) as minmax 
+$sqlQuery = "SELECT Distinct tblb.[Tile ID],A1,A2,A3,A4,USL,LSL,AVE
+            FROM (SELECT [TILE ID],A1,A2,A3,A4,[Per Thickness Min(um)] as LSL,[Per Thickness Max(um)] as USL,
+                ([Per Thickness Min(um)]/2+[Per Thickness Max(um)]/2) as AVE,([DATE] & ' ' & [TIME]) as minmax 
                 FROM [1$]) tbla 
             INNER JOIN (
                 SELECT [TILE ID],
@@ -42,24 +43,28 @@ $sqlQuery = "SELECT Distinct tblb.[Tile ID],A1,A2,A3,A4
 
 $results = odbc_exec($conString, $sqlQuery);
 $xValues = "";
-$A1 = "";
-$A2 = "";
-$A3 = "";
-$A4 = "";
-$A4 = "";
+$A1 = ""; $A2 = ""; $A3 = ""; $A4 = ""; $A5 = "";
+$LSL = ""; $USL = ""; $AVE = "";
+
 
 while(odbc_fetch_row($results)){ 
     $out1 = odbc_result($results, 1); 
     $out2 = odbc_result($results, 2); 
     $out3 = odbc_result($results, 3); 
     $out4 = odbc_result($results, 4);  
-    $out5 = odbc_result($results, 5); 
+    $out5 = odbc_result($results, 5);
+    $out6 = odbc_result($results, 6); 
+    $out7 = odbc_result($results, 7); 
+    $out8 = odbc_result($results, 8);  
 
         $xValues = $xValues.'"'.$out1.'",';
         $A1 = $A1.$out2.',';
         $A2 = $A2.$out3.',';
         $A3 = $A3.$out4.',';
         $A4 = $A4.$out5.',';
+        $LSL = $LSL.$out6.',';
+        $USL = $USL.$out7.',';
+        $AVE = $AVE.$out8.',';
 }
 odbc_free_result($results);
 
@@ -75,13 +80,19 @@ echo(
         var y2 = [];
         var y3 = [];
         var y4 = [];
-        var chartTitle = "Backend"
+        var yLSL = [];
+        var yUSL = [];
+        var yAVE = [];
+        var chartTitle = "'.$PartNo.'"
 
         xValues.push('.$xValues.')
         y1.push('.$A1.')
         y2.push('.$A2.')
         y3.push('.$A3.')
         y4.push('.$A4.')
+        yLSL.push('.$LSL.')
+        yUSL.push('.$USL.')
+        yAVE.push('.$AVE.')
 
     new Chart("myChart", {
                 type: "line",
@@ -89,32 +100,62 @@ echo(
         labels: xValues,
         datasets: [{
             fill: false,
-            borderColor: `rgb(255, 0, 0)`,
+            borderColor: `rgb(255, 255, 0)`,
+            backgroundColor: `rgba(255, 255, 0, 0.5)`,
             tension: 0.1,
             data: y1,
             label: "A1"
             },
             {
             fill: false,
-            borderColor: `rgb(0, 255, 0)`,
+            borderColor: `rgb(0, 255, 255)`,
+            backgroundColor: `rgba(0, 255, 255, 0.5)`,
             tension: 0.1,
             data: y2,
             label: "A2"
             },
             {
             fill: false,
-            borderColor: `rgb(0, 0, 255)`,
+            borderColor: `rgb(255, 0, 255)`,
+            backgroundColor: `rgba(255, 0, 255, 0.5)`,
             tension: 0.1,
             data: y3,
             label: "A3"
             },
             {
             fill: false,
-            borderColor: `rgb(255, 255, 0)`,
+            borderColor: `rgb(127, 255, 0)`,
+            backgroundColor: `rgba(127, 255, 0, 0.5)`,
             tension: 0.1,
             data: y4,
             label: "A4"
             },
+            {
+            fill: false,
+            borderColor: `rgb(255, 0, 0)`,
+            backgroundColor: `rgba(255, 0, 0, 0.5)`,
+            tension: 0.1,
+            data: yLSL,
+            label: "LSL"
+            },
+            {
+            fill: false,
+            borderColor: `rgb(0, 255, 0)`,
+            backgroundColor: `rgba(0, 255, 0, 0.5)`,
+            tension: 0.1,
+            data: yAVE,
+            label: "AVE"
+            },
+            {
+            fill: false,
+            borderColor: `rgb(255, 0, 0)`,
+            backgroundColor: `rgba(255, 0, 0, 0.5)`,
+            tension: 0.1,
+            data: yUSL,
+            label: "USL"
+            },
+            
+
 
         ]
     }
